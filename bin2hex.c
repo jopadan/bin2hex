@@ -1,51 +1,38 @@
 #define _GNU_SOURCE
-#include <stdint.h>
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
 #include <string.h>
-#include <sys/stat.h>
-#include <unistd.h>
+#include "bin2hex.h"
 
-int main(int argc, char** argv)
+char* bin2hex(char* dst, uint8_t* src, size_t n)
 {
-	struct stat sb;
-	FILE* file = NULL;
-	uint8_t* data_file = NULL;
-	char* hex = NULL;
-	if (argc < 2)
-		exit(EXIT_FAILURE);
-	lstat(argv[1], &sb);
-	file = fopen(argv[1], "r");
-	if (file == NULL)
-		exit(EXIT_FAILURE);
+	if( dst == NULL || src == NULL || n == 0)
+		return NULL;
 
-	data_file = malloc(sb.st_size);
-	hex = calloc(sb.st_size * 2 + 4, 1);
-	fread(data_file, 1, sb.st_size, file);
-	uint8_t * nptr = data_file;
-	uint8_t * endptr = data_file + sb.st_size - 1;
-	while(nptr != endptr)
+	/* make sure dst is large enough for hex strings */
+	dst = realloc(dst, n * 2 + 1);
+
+	/* iterate bytes in src */
+	for(size_t i = 0; i < n; i++)
 	{
-		char *hexstr = NULL; 
-		int len = asprintf(&hexstr, "%.2x", *nptr++);
-		if (len > 0)
+		/* 2 char string for hexadecimal byte */
+		char* hexstr;
+
+		/* print byte at src[i] as hexadecimal to hexstr */
+		int len = asprintf(&hexstr, "%.2x", *(uint8_t*)&src[i]);
+		/* append hexstr to dst */
+		if (len > 0) dst = strncat(dst, hexstr, len);
+		/* free temporary storage for hexadecimal string */
+		if(hexstr) free(hexstr);
+		/* bail out if there are errors */
+		if(dst == NULL | len <= 0)
 		{
-			hex = strncat(hex, hexstr, len);
-			free(hexstr);
-			if(hex == NULL)
-			{
-				fprintf(stderr, "Error concatenating hexadecimal string output at offset %lu", endptr - nptr );
-				exit(EXIT_FAILURE);
-			}
-		}
-		else if(len < 0)
-		{
-			fprintf(stderr, "Error printing binary data at offset %lu to hexadecimal string", endptr - nptr );
-			exit(EXIT_FAILURE);
+			fprintf(stderr, "Error concatenating or convert hexadecimal string output at offset %lu\n", i );
+			return NULL;
 		}
 	}
-	printf("%s\n", hex);
-	free(data_file);
-	free(hex);
-	exit(EXIT_SUCCESS);
+
+	/* return pointer to hexadecimal string filled destination */
+	return dst;
 }
