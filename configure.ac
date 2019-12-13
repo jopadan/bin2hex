@@ -13,7 +13,7 @@ AC_PROG_CC_C99
 AC_PROG_MAKE_SET
 AM_MAINTAINER_MODE
 # Checks for libraries.
-AC_CHECK_HEADERS([stdlib.h stdio.h stdint.h string.h sys/stat.h])
+AC_CHECK_HEADERS([stdlib.h stdio.h stdint.h string.h sys/stat.h unistd.h])
 
 
 AC_CONFIG_FILES([Makefile])
