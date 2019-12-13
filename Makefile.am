@@ -1,6 +1,6 @@
 AUTOMAKE_OPTIONS = foreign
 
-dist_doc_DATA = README.md INSTALL.md LICENSE ChangeLog
+dist_doc_DATA = README.md LICENSE
 
 bin_PROGRAMS = bin2hex
 
