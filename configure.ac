@@ -2,8 +2,8 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.69])
-AC_INIT([bin2hex], [1.0], [forkenmasterforce@keemail.me])
-AC_COPYRIGHT([(C) 2019 Jon Daniel <forkenmasterforce@keemail.me>])
+AC_INIT([bin2hex], [1.0], [jondaniel879@gmail.com])
+AC_COPYRIGHT([(C) 2019 Jon Daniel <jondaniel879@gmail.com>])
 AC_CONFIG_SRCDIR([bin2hex.c])
 AC_CONFIG_HEADERS(config.h)
 AM_INIT_AUTOMAKE
